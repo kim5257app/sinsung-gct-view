@@ -1,15 +1,14 @@
 <template>
   <v-container>
     <v-layout>
-      HOME
-      <router-link to="signin">SIGNIN</router-link>
+      LOGIN
     </v-layout>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: 'HomeView',
+  name: 'SignInView',
 };
 </script>
 
