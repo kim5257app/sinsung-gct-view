@@ -1,24 +1,74 @@
 <template>
-  <v-dialog>
-    <v-card>
-      <v-card-title>
-        TITLE
-      </v-card-title>
-    </v-card>
-    <v-card-text>
-      <slot name="default">
-      </slot>
-    </v-card-text>
-    <v-card-actions>
-      <slot name="action">
-      </slot>
-    </v-card-actions>
-  </v-dialog>
+  <div>
+    <v-dialog
+      v-model="showFlag"
+      :max-width="maxWidth"
+      :persistent="persistent"
+      :fullscreen="fullscreen"
+      scrollable>
+      <v-card
+        :tile="!fullscreen">
+        <v-app-bar
+          color="primary"
+          dark
+          flat
+          tile>
+          <v-btn
+            @click="$emit('update:show', false)"
+            class="mr-4"
+            icon>
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </v-btn>
+          <span>
+              {{ title }}
+            </span>
+        </v-app-bar>
+        <v-card-text>
+          <slot>
+          </slot>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <slot name="extension"></slot>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'LayoutDialog',
+  props: {
+    show: {
+      type: Boolean,
+      required: true,
+    },
+    title: {
+      type: String,
+      default: 'TITLE',
+    },
+    persistent: {
+      type: Boolean,
+      default: false,
+    },
+    maxWidth: {
+      type: Number,
+      default: 800,
+    },
+  },
+  computed: {
+    showFlag: {
+      get() {
+        return this.show;
+      },
+      set(value) {
+        this.$emit('update:show', value);
+      },
+    },
+    fullscreen() {
+      return this.$vuetify.breakpoint.xs;
+    },
+  },
 };
 </script>
 

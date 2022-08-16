@@ -1,9 +1,12 @@
+import '@/plugins/firebase';
+
 import {
   getAuth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   signOut,
   onAuthStateChanged,
+  updateProfile,
 } from 'firebase/auth';
 
 const auth = getAuth();
@@ -42,5 +45,10 @@ export default {
   },
   onAuthStateChanged(cb) {
     onAuthStateChanged(auth, cb);
+  },
+  async updateProfile(name) {
+    await updateProfile(auth.currentUser, {
+      displayName: name,
+    });
   },
 };

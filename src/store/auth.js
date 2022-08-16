@@ -1,12 +1,11 @@
 import Vue from 'vue';
-import '@/plugins/firebase';
 import auth from '@/plugins/firebase/auth';
 import fcm from '@/plugins/firebase/fcm';
 
 export default {
   namespaced: true,
   state: {
-    connected: true,
+    connected: false,
     initialized: false,
     userInfo: null,
     showPermission: false,
@@ -43,9 +42,10 @@ export default {
     },
   },
   actions: {
-    'socket.connect': ({ commit, dispatch }) => {
+    'socket.connect': async ({ commit, dispatch }) => {
       commit('connected', true);
-      dispatch('authorization');
+      await dispatch('initialize');
+      await dispatch('authorization');
     },
     'socket.disconnect': ({ commit }) => {
       commit('initialized', false);
@@ -54,22 +54,28 @@ export default {
     getAccessToken(_, { payload, cb }) {
       (new Vue()).$socket.emit('users.token.get', payload, cb);
     },
-    authorization({ commit }) {
-      console.log('authorization');
-
-      auth.onAuthStateChanged((user) => {
-        console.log('user:', user);
-        if (user != null) {
-          commit('userInfo', user);
-        }
-
-        commit('initialized', true);
-      });
+    authorization({ getters }) {
+      if (getters.initialized) {
+        (new Vue()).$socket.emit('auth.verify', {
+          token: getters.userInfo.accessToken,
+        }, (resp) => {
+          console.log('resp:', resp);
+        });
+      }
     },
     unAuthorization({ commit }) {
-      Vue.ls.remove('access');
       commit('userInfo', null);
       commit('token', '');
+    },
+    async initialize({ commit, dispatch }) {
+      auth.onAuthStateChanged((user) => {
+        console.log('onAuthStateChanged:', user);
+        if (user != null) {
+          commit('userInfo', user);
+          commit('initialized', true);
+          dispatch('authorization');
+        }
+      });
     },
     async registerFCMToken() {
       console.log('token:', await fcm.getFCMToken());

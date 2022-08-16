@@ -10,14 +10,26 @@
       top>
       {{ alertInfo.message }}
     </v-snackbar>
+    <dlg-add-name
+      v-if="showAddName"
+      :show.sync="showAddName">
+    </dlg-add-name>
   </v-app>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import dialogSupport, { makeShowFlag } from '@/components/mixins/dialog_support';
+import DlgAddName from '@/components/dialog/DlgAddName.vue';
 
 export default {
   name: 'App',
+  mixins: [
+    dialogSupport,
+  ],
+  components: {
+    DlgAddName,
+  },
   computed: {
     ...mapGetters({
       connected: 'auth/connected',
@@ -28,6 +40,7 @@ export default {
       alertInfo: 'alert/alertInfo',
       showPermission: 'auth/showPermission',
     }),
+    showAddName: makeShowFlag('show_add_name'),
     alertShowFlag: {
       get() {
         return this.alertShow;
@@ -62,13 +75,12 @@ export default {
         }
 
         if (value) {
-          // TODO: 로그인 후 처리해야 하는 작업 정의
+          if (this.userInfo.name == null) {
+            this.showAddName = true;
+          }
         }
       },
     },
-  },
-  mounted() {
-    this.$store.dispatch('auth/authorization');
   },
   methods: {
     ...mapMutations({
