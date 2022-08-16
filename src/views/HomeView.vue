@@ -1,8 +1,13 @@
 <template>
   <v-container>
+    <v-app-bar
+      app
+      color="primary">
+      <v-app-bar-nav-icon
+        dark>
+      </v-app-bar-nav-icon>
+    </v-app-bar>
     <v-layout>
-      HOME
-      <router-link to="signin">SIGNIN</router-link>
     </v-layout>
   </v-container>
 </template>

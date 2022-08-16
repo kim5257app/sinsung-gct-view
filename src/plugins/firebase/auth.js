@@ -1,23 +1,46 @@
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
 const auth = getAuth();
-auth.languageCode = 'it';
+auth.languageCode = 'ko';
+
+let recaptchaVerifier = null;
+let confirmationResult = null;
+let requestPhone = '';
 
 export default {
   makeRecaptchaVerifier(el, cb) {
-    return new RecaptchaVerifier(el, {
+    recaptchaVerifier = new RecaptchaVerifier(el, {
       size: 'invisible',
       callback: cb,
     }, auth);
+
+    return recaptchaVerifier;
   },
-  async resetRecaptchaVerifier(recaptchaVerifier) {
+  async resetRecaptchaVerifier() {
     const widgetId = await recaptchaVerifier.render();
     recaptchaVerifier.reset(widgetId);
   },
-  async signInWithPhoneNumber(recaptchaVerifier, phone) {
-    return signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+  async signInWithPhoneNumber(phone) {
+    if (phone != null) {
+      requestPhone = phone;
+    }
+
+    confirmationResult = await signInWithPhoneNumber(auth, requestPhone, recaptchaVerifier);
+    return confirmationResult;
   },
-  async confirmSignInCode(confirmationResult, code) {
+  async confirmSignInCode(code) {
     return confirmationResult.confirm(code);
+  },
+  async signOut() {
+    return signOut(auth);
+  },
+  onAuthStateChanged(cb) {
+    onAuthStateChanged(auth, cb);
   },
 };
