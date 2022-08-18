@@ -56,7 +56,7 @@ export default {
     },
     authorization({ getters }) {
       if (getters.initialized) {
-        (new Vue()).$socket.emit('auth.verify', {
+        (new Vue()).$socket.emit('users.verify', {
           token: getters.userInfo.accessToken,
         }, (resp) => {
           console.log('resp:', resp);

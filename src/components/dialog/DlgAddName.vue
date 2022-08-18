@@ -50,9 +50,20 @@ export default {
     async addName() {
       this.loading = true;
       await firebaseAuth.updateProfile(this.form.name);
-      this.loading = false;
 
-      this.$router.goBack();
+      this.$socket.emit('users.update', this.form, (resp) => {
+        if (resp.result === 'success') {
+          // Do nothing.
+        } else {
+          this.showAlert({
+            color: 'error',
+            message: resp.message,
+          });
+        }
+
+        this.loading = false;
+        this.$router.goBack();
+      });
     },
   },
 };

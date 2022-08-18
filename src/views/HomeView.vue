@@ -8,7 +8,7 @@
       </v-app-bar-nav-icon>
     </v-app-bar>
     <v-layout>
-      {{ userInfo.displayName }}
+      {{ (userInfo != null) ? userInfo.displayName : '' }}
     </v-layout>
   </v-container>
 </template>
