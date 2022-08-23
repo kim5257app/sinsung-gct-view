@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import alert from './alert';
 import auth from './auth';
 import router from './router';
+import room from './room';
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
     alert,
     auth,
     router,
+    room,
   },
 });

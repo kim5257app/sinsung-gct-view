@@ -75,7 +75,7 @@ export default {
         }
 
         if (value) {
-          if (this.userInfo.displayName == null) {
+          if (this.userInfo.name == null) {
             this.showAddName = true;
           }
         }

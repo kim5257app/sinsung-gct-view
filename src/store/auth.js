@@ -8,6 +8,7 @@ export default {
     connected: false,
     initialized: false,
     userInfo: null,
+    firebaseInfo: null,
     showPermission: false,
   },
   getters: {
@@ -23,6 +24,9 @@ export default {
     userInfo(state) {
       return state.userInfo;
     },
+    firebaseInfo(state) {
+      return state.firebaseInfo;
+    },
     showPermission(state) {
       return state.showPermission;
     },
@@ -36,6 +40,9 @@ export default {
     },
     userInfo(state, value) {
       state.userInfo = value;
+    },
+    firebaseInfo(state, value) {
+      state.firebaseInfo = value;
     },
     showPermission(state, value) {
       state.showPermission = value;
@@ -54,12 +61,21 @@ export default {
     getAccessToken(_, { payload, cb }) {
       (new Vue()).$socket.emit('users.token.get', payload, cb);
     },
-    authorization({ getters }) {
-      if (getters.initialized) {
+    authorization({ getters, commit, dispatch }) {
+      if (getters.firebaseInfo != null) {
+        console.log('authorization:', getters.firebaseInfo.accessToken);
+
         (new Vue()).$socket.emit('users.verify', {
-          token: getters.userInfo.accessToken,
+          token: getters.firebaseInfo.accessToken,
         }, (resp) => {
-          console.log('resp:', resp);
+          console.log('resp:', resp, getters);
+
+          if (resp.result === 'success') {
+            commit('userInfo', resp.item);
+            commit('initialized', true);
+
+            dispatch('room/getRoomList', null, { root: true });
+          }
         });
       }
     },
@@ -71,8 +87,7 @@ export default {
       auth.onAuthStateChanged((user) => {
         console.log('onAuthStateChanged:', user);
         if (user != null) {
-          commit('userInfo', user);
-          commit('initialized', true);
+          commit('firebaseInfo', user);
           dispatch('authorization');
         }
       });

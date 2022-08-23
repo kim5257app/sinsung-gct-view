@@ -8,9 +8,19 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'home',
     component: HomeView,
     meta: { needAuth: true, onlyNonAuth: false },
+    children: [
+      {
+        path: '/',
+        name: 'roomlist',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/home/RoomList.vue'),
+        meta: { needAuth: false, onlyNonAuth: true },
+      },
+    ],
   },
   {
     path: '/signin',

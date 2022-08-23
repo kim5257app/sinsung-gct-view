@@ -7,9 +7,8 @@
         dark>
       </v-app-bar-nav-icon>
     </v-app-bar>
-    <v-layout>
-      {{ (userInfo != null) ? userInfo.displayName : '' }}
-    </v-layout>
+    <router-view>
+    </router-view>
   </v-container>
 </template>
 
@@ -26,6 +25,8 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.container {
+  padding: 0;
+}
 </style>
