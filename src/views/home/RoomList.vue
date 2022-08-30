@@ -31,17 +31,45 @@
         </v-list-item>
       </v-list-item>
     </v-list>
+    <v-fab-transition>
+      <v-btn
+        @click="showAddRoom = true"
+        color="primary"
+        fixed
+        bottom
+        right
+        fab>
+        <v-icon>
+          mdi-pencil
+        </v-icon>
+      </v-btn>
+    </v-fab-transition>
+    <dlg-add-room
+      :show.sync="showAddRoom">
+    </dlg-add-room>
   </v-layout>
 </template>
 
 <script>
+import dialogSupport, { makeShowFlag } from '@/components/mixins/dialog_support';
+import DlgAddRoom from '@/components/dialog/DlgAddRoom.vue';
+
 import defaultRoomIcon from '@/assets/default_room_icon.png';
 
 export default {
   name: 'RoomList',
+  components: {
+    DlgAddRoom,
+  },
+  mixins: [
+    dialogSupport,
+  ],
   data: () => ({
     defaultRoomIcon,
   }),
+  computed: {
+    showAddRoom: makeShowFlag('add_room'),
+  },
 };
 </script>
 

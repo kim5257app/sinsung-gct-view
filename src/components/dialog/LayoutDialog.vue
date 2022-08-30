@@ -8,13 +8,17 @@
       scrollable>
       <v-card
         :tile="!fullscreen">
-        <v-app-bar
+        <v-card-title
+          :style="{
+            backgroundColor: 'var(--v-primary-base)',
+            color: '#ffffff',
+          }"
           color="primary"
-          dark
           flat
           tile>
           <v-btn
             @click="$emit('update:show', false)"
+            dark
             class="mr-4"
             icon>
             <v-icon>
@@ -24,7 +28,7 @@
           <span>
               {{ title }}
             </span>
-        </v-app-bar>
+        </v-card-title>
         <v-card-text>
           <slot>
           </slot>
