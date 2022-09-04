@@ -14,20 +14,23 @@ const routes = [
       {
         path: '/',
         name: 'roomlist',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/home/RoomList.vue'),
-        meta: { needAuth: false, onlyNonAuth: true },
+        component: () => import(/* webpackChunkName: "roomlist" */ '../views/home/RoomListView.vue'),
+        meta: { needAuth: true, onlyNonAuth: false },
       },
     ],
   },
   {
+    path: '/room/:roomNo',
+    name: 'room',
+    component: () => import(/* webpackChunkName: "room" */ '../views/RoomView.vue'),
+    meta: { needAuth: true, onlyNonAuth: false },
+    props: (route) => ({
+      roomNo: parseInt(route.params.roomNo, 10),
+    }),
+  },
+  {
     path: '/signin',
     name: 'signin',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/SignInView.vue'),
     meta: { needAuth: false, onlyNonAuth: true },
   },
